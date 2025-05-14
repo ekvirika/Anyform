@@ -30,6 +30,9 @@ const FormSubmissions: React.FC = () => {
     }
   }, [id]);
 
+  // Ensure form.fields is always an array
+  const safeFields = form?.fields || [];
+
   if (loading || !form) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -61,7 +64,7 @@ const FormSubmissions: React.FC = () => {
                 >
                   Submission Date
                 </th>
-                {form.fields.map((field) => (
+                {safeFields.map((field) => (
                   <th
                     key={field.id}
                     scope="col"
@@ -78,7 +81,7 @@ const FormSubmissions: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {new Date(submission.submittedAt).toLocaleDateString()}
                   </td>
-                  {form.fields.map((field) => (
+                  {safeFields.map((field) => (
                     <td
                       key={field.id}
                       className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"

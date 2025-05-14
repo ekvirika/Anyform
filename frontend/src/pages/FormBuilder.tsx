@@ -11,10 +11,20 @@ const FormBuilder: React.FC = () => {
     title: '',
     description: '',
     status: 'draft',
-    fields: [],
+    fields: [], // Initialize with empty array
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   });
+  
+  // Ensure form.fields is always an array
+  useEffect(() => {
+    if (form.fields === undefined) {
+      setForm(prev => ({
+        ...prev,
+        fields: []
+      }));
+    }
+  }, [form.fields]);
 
   useEffect(() => {
     if (id) {

@@ -11,7 +11,7 @@ export interface Form {
   title: string;
   description: string;
   status: FormStatus;
-  fields: FormField[];
+  fields: FormField[]; // Required, defaults to empty array
   createdAt: string;
   updatedAt: string;
 }

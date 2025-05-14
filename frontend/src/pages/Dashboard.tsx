@@ -6,12 +6,23 @@ import api from '../services/api';
 const Dashboard: React.FC = () => {
   const [forms, setForms] = useState<Form[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  // Ensure forms have fields array
+  const safeForms = forms.map(form => ({
+    ...form,
+    fields: form.fields || []
+  }));
 
   useEffect(() => {
     const fetchForms = async () => {
       try {
         const response = await api.get<Form[]>('/forms');
-        setForms(response.data);
+        // Ensure each form has a fields array
+        const formsWithFields = response.data.map(form => ({
+          ...form,
+          fields: form.fields || []
+        }));
+        setForms(formsWithFields);
       } catch (error) {
         console.error('Error fetching forms:', error);
         // Optionally handle the error in the UI
@@ -43,7 +54,7 @@ const Dashboard: React.FC = () => {
         </Link>
       </div>
 
-      {forms.length === 0 ? (
+      {safeForms.length === 0 ? (
         <div className="text-center py-12">
           <h3 className="text-lg font-medium text-gray-900 mb-2">No forms yet</h3>
           <p className="text-gray-500">Get started by creating a new form</p>
@@ -58,7 +69,7 @@ const Dashboard: React.FC = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {forms.map((form) => (
+          {safeForms.map((form) => (
             <div
               key={form.id}
               className="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200"
@@ -77,7 +88,7 @@ const Dashboard: React.FC = () => {
                 </p>
                 <div className="mt-4">
                   <p className="text-sm text-gray-500">
-                    {form.fields.length} fields
+                    {form.fields.length > 0 ? `${form.fields.length} fields` : 'No fields yet'}
                   </p>
                 </div>
               </div>
